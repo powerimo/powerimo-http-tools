@@ -1,0 +1,7 @@
+{
+  "message": "sample message",
+  "data": {
+    "intField": 123,
+    "stringField": "sample string field"
+  }
+}
