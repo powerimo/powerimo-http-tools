@@ -71,7 +71,7 @@ public class EnvelopeTest {
         String messageCode = "TEST-CODE";
         int code = 400;
 
-        Envelope<Object> envelope = Envelope.builderByClass()
+        Envelope<Object> envelope = Envelope.builder()
                 .path(path)
                 .data(payload)
                 .message(message)

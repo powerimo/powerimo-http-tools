@@ -39,7 +39,7 @@ public class Envelope<T> {
         return envelope;
     }
 
-    public static <T> Builder<T> builderByClass() {
+    public static <T> Builder<T> builder() {
         return new Builder<>();
     }
 
