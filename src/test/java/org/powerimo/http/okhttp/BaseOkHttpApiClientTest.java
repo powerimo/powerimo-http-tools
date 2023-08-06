@@ -10,8 +10,7 @@ import org.powerimo.http.MockDataObject;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.spy;
 
 public class BaseOkHttpApiClientTest {
@@ -62,7 +61,7 @@ public class BaseOkHttpApiClientTest {
     }
 
     @Test
-    void testGet() throws IOException {
+    void getTest() throws IOException {
         var answerBody = Utils.readTextResource("response2.json");
 
         mockWebServer.enqueue(new MockResponse()
@@ -73,4 +72,45 @@ public class BaseOkHttpApiClientTest {
         assertNotNull(data);
     }
 
+    @Test
+    void postTest() throws IOException {
+        var requestBody = new MockDataObject();
+        requestBody.setIntField(321);
+        requestBody.setStringField("aaa");
+
+        var answerBody = Utils.readTextResource("response2.json");
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(answerBody));
+
+        var url = apiClient.buildUrl("test");
+        var data = apiClient.executePost(url, MockDataObject.class, requestBody);
+
+        assertNotNull(data);
+    }
+
+    @Test
+    void deleteTest() throws IOException {
+        var requestBody = new MockDataObject();
+        requestBody.setIntField(321);
+        requestBody.setStringField("aaa");
+
+        var answerBody = Utils.readTextResource("response2.json");
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(answerBody));
+
+        var url = apiClient.buildUrl("test");
+        var data = apiClient.executeDelete(url, MockDataObject.class, requestBody);
+
+        assertNotNull(data);
+    }
+
+    @Test
+    void constructorTest() {
+        var client = new BaseOkHttpApiClient();
+
+        assertEquals(BaseOkHttpApiClient.HEADER_API_KEY, client.getApiKeyHeader());
+        assertNull(client.getHttpClient());
+        assertNull(client.getConfig());
+        assertNull(client.getPayloadConverter());
+    }
 }

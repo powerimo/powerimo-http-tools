@@ -17,6 +17,8 @@ public class BaseOkHttpApiClient {
     private OkHttpClient httpClient;
     private BaseOkHttpClientConfig config;
     private OkHttpPayloadConverter payloadConverter;
+    private String apiKeyHeader = HEADER_API_KEY;
+
     public static final String HEADER_API_KEY = "x-api-key";
 
     protected void checkConfig() {
@@ -31,8 +33,9 @@ public class BaseOkHttpApiClient {
     }
 
     protected void checkPayloadConverter() {
-        if (payloadConverter == null)
-            throw new ApiClientException("PayloadConverter is not specified.");
+        if (payloadConverter == null) {
+            payloadConverter = new StdPayloadConverter();
+        }
     }
 
     public Response executeRequest(@NonNull Request request) throws IOException {
@@ -40,7 +43,7 @@ public class BaseOkHttpApiClient {
         checkConfig();
 
         Request prepared = request.newBuilder()
-                .addHeader(HEADER_API_KEY, config.getApiKey())
+                .addHeader(apiKeyHeader, config.getApiKey())
                 .build();
 
         var call = httpClient.newCall(prepared);
@@ -90,6 +93,16 @@ public class BaseOkHttpApiClient {
         Request request = new Request.Builder()
                 .url(url)
                 .post(requestBody)
+                .build();
+        return executeRequest(request, payloadClass, true);
+    }
+
+    public <T> T executeDelete(@NonNull String url, Class<T> payloadClass, Object body) {
+        var requestBody = payloadConverter.serialize(body);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .delete(requestBody)
                 .build();
         return executeRequest(request, payloadClass, true);
     }

@@ -1,6 +1,5 @@
 package org.powerimo.http;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.Data;
 
 import java.time.Instant;
@@ -22,14 +21,12 @@ public class Envelope<T> {
         return envelope;
     }
 
-    public static <T> Envelope<T> of(T payload, HttpServletRequest request) {
+    public static <T> Envelope<T> of(T payload, String path) {
         Envelope<T> envelope = new Envelope<>();
         envelope.code = 200;
         envelope.data = payload;
         envelope.timestamp = Instant.now();
-        if (request != null) {
-            envelope.path = request.getRequestURI();
-        }
+        envelope.path = path;
         return envelope;
     }
 
@@ -42,8 +39,12 @@ public class Envelope<T> {
         return envelope;
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static <T> Builder<T> builderByClass() {
+        return new Builder<>();
+    }
+
+    public static <F> Builder<F> builderByClass(Class<F> payloadClass) {
+        return new Builder<F>();
     }
 
     public static class Builder<T> {
@@ -53,45 +54,39 @@ public class Envelope<T> {
         private String message;
         private String messageCode;
         private String path;
-        private HttpServletRequest request;
 
-        public Builder timestamp(Instant value) {
+        public Builder<T> timestamp(Instant value) {
             this.timestamp = value;
             return this;
         }
 
-        public Builder code(Integer code) {
+        public Builder<T> code(Integer code) {
             this.code = code;
             return this;
         }
 
-        public Builder data(T data) {
+        public Builder<T> data(T data) {
             this.data = data;
             return this;
         }
 
-        public Builder message(String message) {
+        public Builder<T> message(String message) {
             this.message = message;
             return this;
         }
 
-        public Builder messageCode(String value) {
+        public Builder<T> messageCode(String value) {
             this.messageCode = value;
             return this;
         }
 
-        public Builder request(HttpServletRequest request) {
-            this.request = request;
-            return this;
-        }
-
-        public Builder path(String value) {
+        public Builder<T> path(String value) {
             this.path = value;
             return this;
         }
 
         public Envelope<T> build() {
-            Envelope<T> envelope = new Envelope<>();
+            Envelope<T> envelope = new Envelope<T>();
             if (this.code != null)
                 envelope.code = this.code;
             if (this.timestamp != null)
@@ -100,10 +95,7 @@ public class Envelope<T> {
                 envelope.timestamp = Instant.now();
             envelope.message = this.message;
             envelope.messageCode = this.messageCode;
-            if (this.request != null && this.path == null)
-                envelope.path = this.request.getRequestURI();
-            else
-                envelope.path = this.path;
+            envelope.path = this.path;
             envelope.data = this.data;
             return envelope;
         }
