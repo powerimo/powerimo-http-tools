@@ -11,7 +11,9 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig {
     private String url;
-    public String apiKey;
+    private String apiKey;
+    private long connectTimeout = 0;
+    private long callTimeout = 0;
 
     @Override
     public String getUrl() {
@@ -23,4 +25,13 @@ public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig {
         return apiKey;
     }
 
+    @Override
+    public long getConnectTimeout() {
+        return connectTimeout;
+    }
+
+    @Override
+    public long getCallTimeout() {
+        return callTimeout;
+    }
 }

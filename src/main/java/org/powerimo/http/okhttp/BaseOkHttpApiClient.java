@@ -10,6 +10,7 @@ import org.powerimo.http.exceptions.ApiCallException;
 import org.powerimo.http.exceptions.ApiClientException;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
@@ -27,8 +28,13 @@ public class BaseOkHttpApiClient {
     }
 
     protected void checkHttpClient() {
+        checkConfig();
         if (httpClient == null) {
-            httpClient = new OkHttpClient();
+            httpClient = new OkHttpClient.Builder()
+                    .callTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
+                    .readTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
+                    .connectTimeout(config.getConnectTimeout(), TimeUnit.SECONDS)
+                    .build();
         }
     }
 
