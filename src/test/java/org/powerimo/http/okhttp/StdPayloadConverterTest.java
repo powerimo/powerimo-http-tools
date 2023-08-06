@@ -1,5 +1,6 @@
 package org.powerimo.http.okhttp;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import okhttp3.MediaType;
@@ -10,6 +11,7 @@ import org.powerimo.http.MockDataObject;
 import org.powerimo.http.exceptions.PayloadConvertException;
 
 import java.io.IOException;
+import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -45,7 +47,7 @@ public class StdPayloadConverterTest {
     void deserializeEnvelope() throws IOException {
         var s = Utils.readTextResource("response2.json");
 
-        var envelope = converter.convertEnvelope(s, TestObject.class);
+        var envelope = converter.deserializeEnvelope(s, TestObject.class);
         assertNotNull(envelope);
 
         var data = envelope.getData();
@@ -73,7 +75,36 @@ public class StdPayloadConverterTest {
     void deserializeEnvelopeExceptionTest() {
         var converter = new StdPayloadConverter();
 
-        Assertions.assertThrows(PayloadConvertException.class, () -> converter.convertEnvelope("{aaa", MockDataObject.class));
+        Assertions.assertThrows(PayloadConvertException.class, () -> converter.deserializeEnvelope("{aaa", MockDataObject.class));
     }
 
+    @Test
+    void deserializeEnvelopeTimestampTest() throws IOException {
+        var converter = new StdPayloadConverter();
+        var text = Utils.readTextResource("response_instant.json");
+
+        var envelope = converter.deserializeEnvelope(text, MockDataObject.class);
+
+        assertNotNull(envelope.getTimestamp());
+    }
+
+    //@Test
+    void deserializeEnvelopeTimestampWithoutTimestampTest() throws IOException {
+        var converter = new StdPayloadConverter();
+        var text = Utils.readTextResource("response_instant2.json");
+
+        var envelope = converter.deserializeEnvelope(text, MockDataObject.class);
+
+        assertNotNull(envelope.getTimestamp());
+    }
+
+    @Test
+    void mapperInstantTest() throws JsonProcessingException {
+        Instant t = Instant.now();
+        String data = converter.getObjectMapper().writeValueAsString(t);
+        assertNotNull(data);
+
+        var t2 = converter.getObjectMapper().readValue(data, Instant.class);
+        assertEquals(t, t2);
+    }
 }
