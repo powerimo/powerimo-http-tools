@@ -105,6 +105,22 @@ public class BaseOkHttpApiClientTest {
     }
 
     @Test
+    void deleteEmpty() throws IOException {
+        var requestBody = new MockDataObject();
+        requestBody.setIntField(321);
+        requestBody.setStringField("aaa");
+
+        var answerBody = Utils.readTextResource("response_empty.json");
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(answerBody));
+
+        var url = apiClient.buildUrl("test");
+        var data = apiClient.executeDelete(url, null, requestBody);
+
+        assertNull(data);
+    }
+
+    @Test
     void constructorTest() {
         var client = new BaseOkHttpApiClient();
 

@@ -63,10 +63,14 @@ public class BaseOkHttpApiClient {
         }
     }
 
-    public <T> T executeRequest(@NonNull Request request, @NonNull Class<T> payloadClass, boolean allowEmptyBody) {
+    public <T> T executeRequest(@NonNull Request request, Class<T> payloadClass, boolean allowEmptyBody) {
         try {
             var response = executeRequest(request);
-            return extractBody(payloadClass, response, allowEmptyBody);
+            if (payloadClass != null) {
+                return extractBody(payloadClass, response, allowEmptyBody);
+            } else {
+                return null;
+            }
         } catch (IOException ex) {
             throw new ApiClientException("Exception on executing the request", ex);
         }
