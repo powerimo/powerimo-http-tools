@@ -104,13 +104,21 @@ public class BaseOkHttpApiClient {
     }
 
     public <T> T executeDelete(@NonNull String url, Class<T> payloadClass, Object body) {
-        var requestBody = payloadConverter.serialize(body);
+        if (body != null) {
+            var requestBody = payloadConverter.serialize(body);
 
-        Request request = new Request.Builder()
-                .url(url)
-                .delete(requestBody)
-                .build();
-        return executeRequest(request, payloadClass, true);
+            Request request = new Request.Builder()
+                    .url(url)
+                    .delete(requestBody)
+                    .build();
+            return executeRequest(request, payloadClass, true);
+        } else {
+            Request request = new Request.Builder()
+                    .url(url)
+                    .delete()
+                    .build();
+            return executeRequest(request, payloadClass, true);
+        }
     }
 
     public String buildUrl(Object... args) {
