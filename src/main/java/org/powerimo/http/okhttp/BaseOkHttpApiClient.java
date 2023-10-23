@@ -107,6 +107,16 @@ public class BaseOkHttpApiClient {
         return executeRequest(request, payloadClass, true);
     }
 
+    public <T> T executePut(@NonNull String url, Class<T> payloadClass, Object body) {
+        var requestBody = payloadConverter.serialize(body);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .put(requestBody)
+                .build();
+        return executeRequest(request, payloadClass, true);
+    }
+
     public <T> T executeDelete(@NonNull String url, Class<T> payloadClass, Object body) {
         if (body != null) {
             var requestBody = payloadConverter.serialize(body);
