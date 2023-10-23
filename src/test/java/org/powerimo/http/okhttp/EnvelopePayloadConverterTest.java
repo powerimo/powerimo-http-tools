@@ -16,8 +16,8 @@ import java.time.Instant;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class StdPayloadConverterTest {
-    private final StdPayloadConverter converter = new StdPayloadConverter();
+public class EnvelopePayloadConverterTest {
+    private final EnvelopePayloadConverter converter = new EnvelopePayloadConverter();
 
     @Data
     public static class TestObject {
@@ -35,22 +35,9 @@ public class StdPayloadConverterTest {
 
     @Test
     void deserializeTest() throws IOException {
-        var s = Utils.readTextResource("response1.json");
-
-        var data = converter.convert(s, TestObject.class);
-        assertNotNull(data);
-        assertEquals(123, data.intField);
-        assertEquals("sample string field", data.stringField);
-    }
-
-    @Test
-    void deserializeEnvelope() throws IOException {
         var s = Utils.readTextResource("response2.json");
 
-        var envelope = converter.deserializeEnvelope(s, TestObject.class);
-        assertNotNull(envelope);
-
-        var data = envelope.getData();
+        var data = converter.deserialize(s, TestObject.class);
         assertNotNull(data);
         assertEquals(123, data.intField);
         assertEquals("sample string field", data.stringField);

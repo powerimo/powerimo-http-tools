@@ -1,24 +1,24 @@
 package org.powerimo.http.okhttp;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.*;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import org.powerimo.http.Envelope;
 import org.powerimo.http.exceptions.PayloadConvertException;
 
 @Getter
 @Setter
-@Deprecated
-public class StdPayloadConverter implements OkHttpPayloadConverter {
-
+public class DefaultPayloadConverter implements OkHttpPayloadConverter {
     private final ObjectMapper objectMapper;
 
-    public StdPayloadConverter() {
+    public DefaultPayloadConverter() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
@@ -28,35 +28,8 @@ public class StdPayloadConverter implements OkHttpPayloadConverter {
         objectMapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
     }
 
-    public StdPayloadConverter(ObjectMapper mapper) {
-        this.objectMapper = mapper;
-    }
-
-    public <T> T convert(@NonNull String payload, Class<T> cls) {
-        try {
-            return objectMapper.readValue(payload, cls);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
-    }
-
-    @Override
-    public <T> T deserialize(@NonNull String payload, Class<T> cls) {
-        try {
-            return objectMapper.readValue(payload, cls);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
-    }
-
-    //@Override
-    public <T> Envelope<T> deserializeEnvelope(@NonNull String payload, Class<T> cls) {
-        try {
-            JavaType type = objectMapper.getTypeFactory().constructParametricType(Envelope.class, cls);
-            return objectMapper.readValue(payload, type);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
+    public DefaultPayloadConverter(ObjectMapper objectMapper1) {
+        this.objectMapper = objectMapper1;
     }
 
     @Override
@@ -71,4 +44,12 @@ public class StdPayloadConverter implements OkHttpPayloadConverter {
         }
     }
 
+    @Override
+    public <T> T deserialize(@NonNull String payload, Class<T> cls) {
+        try {
+            return objectMapper.readValue(payload, cls);
+        } catch (JsonProcessingException e) {
+            throw new PayloadConvertException(e);
+        }
+    }
 }

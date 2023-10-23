@@ -28,7 +28,7 @@ public class BaseOkHttpApiClientTest {
 
         apiClient = new BaseOkHttpApiClient();
         apiClient.setConfig(config);
-        apiClient.setPayloadConverter(new StdPayloadConverter());
+        apiClient.setPayloadConverter(new EnvelopePayloadConverter());
 
         mockWebServer = new MockWebServer();
         config.setUrl("http://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort());

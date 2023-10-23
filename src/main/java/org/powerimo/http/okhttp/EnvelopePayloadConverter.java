@@ -13,12 +13,10 @@ import org.powerimo.http.exceptions.PayloadConvertException;
 
 @Getter
 @Setter
-@Deprecated
-public class StdPayloadConverter implements OkHttpPayloadConverter {
-
+public class EnvelopePayloadConverter implements OkHttpPayloadConverter {
     private final ObjectMapper objectMapper;
 
-    public StdPayloadConverter() {
+    public EnvelopePayloadConverter() {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
@@ -28,35 +26,8 @@ public class StdPayloadConverter implements OkHttpPayloadConverter {
         objectMapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
     }
 
-    public StdPayloadConverter(ObjectMapper mapper) {
-        this.objectMapper = mapper;
-    }
-
-    public <T> T convert(@NonNull String payload, Class<T> cls) {
-        try {
-            return objectMapper.readValue(payload, cls);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
-    }
-
-    @Override
-    public <T> T deserialize(@NonNull String payload, Class<T> cls) {
-        try {
-            return objectMapper.readValue(payload, cls);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
-    }
-
-    //@Override
-    public <T> Envelope<T> deserializeEnvelope(@NonNull String payload, Class<T> cls) {
-        try {
-            JavaType type = objectMapper.getTypeFactory().constructParametricType(Envelope.class, cls);
-            return objectMapper.readValue(payload, type);
-        } catch (JsonProcessingException e) {
-            throw new PayloadConvertException(e);
-        }
+    public EnvelopePayloadConverter(ObjectMapper objectMapper1) {
+        objectMapper = objectMapper1;
     }
 
     @Override
@@ -68,6 +39,21 @@ public class StdPayloadConverter implements OkHttpPayloadConverter {
             return RequestBody.create(b, MediaType.get("application/json"));
         } catch (JsonProcessingException ex) {
             throw new PayloadConvertException(ex);
+        }
+    }
+
+    @Override
+    public <T> T deserialize(@NonNull String payload, Class<T> cls) {
+        var data = deserializeEnvelope(payload, cls);
+        return data.getData();
+    }
+
+    public <T> Envelope<T> deserializeEnvelope(@NonNull String payload, Class<T> cls) {
+        try {
+            JavaType type = objectMapper.getTypeFactory().constructParametricType(Envelope.class, cls);
+            return objectMapper.readValue(payload, type);
+        } catch (JsonProcessingException e) {
+            throw new PayloadConvertException(e);
         }
     }
 

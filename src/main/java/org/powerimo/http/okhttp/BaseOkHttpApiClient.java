@@ -80,8 +80,7 @@ public class BaseOkHttpApiClient {
         checkPayloadConverter();
 
         if (response.body() != null) {
-            var envelope = payloadConverter.deserializeEnvelope(response.body().string(), payloadClass);
-            return envelope.getData();
+            return payloadConverter.deserialize(response.body().string(), payloadClass);
         }
 
         if (allowEmptyBody) {
