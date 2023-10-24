@@ -46,28 +46,28 @@ public class EnvelopePayloadConverterTest {
     @Test
     void constructorWithObjectMapperTest() {
         var mapper = new ObjectMapper();
-        var converter = new StdPayloadConverter(mapper);
+        var converter = new EnvelopePayloadConverter(mapper);
 
         assertNotNull(converter);
     }
 
     @Test
     void deserializeExceptionTest() {
-        var converter = new StdPayloadConverter();
+        var converter = new EnvelopePayloadConverter();
 
-        Assertions.assertThrows(PayloadConvertException.class, () -> converter.convert("{aaa", MockDataObject.class));
+        Assertions.assertThrows(PayloadConvertException.class, () -> converter.deserialize("{aaa", MockDataObject.class));
     }
 
     @Test
     void deserializeEnvelopeExceptionTest() {
-        var converter = new StdPayloadConverter();
+        var converter = new EnvelopePayloadConverter();
 
         Assertions.assertThrows(PayloadConvertException.class, () -> converter.deserializeEnvelope("{aaa", MockDataObject.class));
     }
 
     @Test
     void deserializeEnvelopeTimestampTest() throws IOException {
-        var converter = new StdPayloadConverter();
+        var converter = new EnvelopePayloadConverter();
         var text = Utils.readTextResource("response_instant.json");
 
         var envelope = converter.deserializeEnvelope(text, MockDataObject.class);
@@ -77,7 +77,7 @@ public class EnvelopePayloadConverterTest {
 
     //@Test
     void deserializeEnvelopeTimestampWithoutTimestampTest() throws IOException {
-        var converter = new StdPayloadConverter();
+        var converter = new EnvelopePayloadConverter();
         var text = Utils.readTextResource("response_instant2.json");
 
         var envelope = converter.deserializeEnvelope(text, MockDataObject.class);

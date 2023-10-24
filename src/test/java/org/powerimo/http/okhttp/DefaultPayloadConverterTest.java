@@ -46,43 +46,16 @@ public class DefaultPayloadConverterTest {
     @Test
     void constructorWithObjectMapperTest() {
         var mapper = new ObjectMapper();
-        var converter = new StdPayloadConverter(mapper);
+        var converter = new DefaultPayloadConverter(mapper);
 
         assertNotNull(converter);
     }
 
     @Test
     void deserializeExceptionTest() {
-        var converter = new StdPayloadConverter();
+        var converter = new DefaultPayloadConverter();
 
-        Assertions.assertThrows(PayloadConvertException.class, () -> converter.convert("{aaa", MockDataObject.class));
-    }
-
-    @Test
-    void deserializeEnvelopeExceptionTest() {
-        var converter = new StdPayloadConverter();
-
-        Assertions.assertThrows(PayloadConvertException.class, () -> converter.deserializeEnvelope("{aaa", MockDataObject.class));
-    }
-
-    @Test
-    void deserializeEnvelopeTimestampTest() throws IOException {
-        var converter = new StdPayloadConverter();
-        var text = Utils.readTextResource("response_instant.json");
-
-        var envelope = converter.deserializeEnvelope(text, MockDataObject.class);
-
-        assertNotNull(envelope.getTimestamp());
-    }
-
-    //@Test
-    void deserializeEnvelopeTimestampWithoutTimestampTest() throws IOException {
-        var converter = new StdPayloadConverter();
-        var text = Utils.readTextResource("response_instant2.json");
-
-        var envelope = converter.deserializeEnvelope(text, MockDataObject.class);
-
-        assertNotNull(envelope.getTimestamp());
+        Assertions.assertThrows(PayloadConvertException.class, () -> converter.deserialize("{aaa", MockDataObject.class));
     }
 
     @Test

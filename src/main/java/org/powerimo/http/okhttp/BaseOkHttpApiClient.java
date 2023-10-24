@@ -40,7 +40,7 @@ public class BaseOkHttpApiClient {
 
     protected void checkPayloadConverter() {
         if (payloadConverter == null) {
-            payloadConverter = new StdPayloadConverter();
+            payloadConverter = new DefaultPayloadConverter();
         }
     }
 
