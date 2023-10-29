@@ -10,11 +10,16 @@ import org.powerimo.http.exceptions.ApiCallException;
 import org.powerimo.http.exceptions.ApiClientException;
 
 import java.io.IOException;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 
 @Getter
 @Setter
-public class BaseOkHttpApiClient {
+public class BaseOkHttpApiClient implements Serializable {
+    @Serial
+    private final static long serialVersionUID = -8595931108573302900L;
+
     private OkHttpClient httpClient;
     private BaseOkHttpClientConfig config;
     private OkHttpPayloadConverter payloadConverter;

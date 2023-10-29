@@ -5,11 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig {
+public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig, Serializable {
+    @Serial
+    private final static long serialVersionUID = 3600222323573700056L;
+
     private String url;
     private String apiKey;
     private long connectTimeout = 0;
