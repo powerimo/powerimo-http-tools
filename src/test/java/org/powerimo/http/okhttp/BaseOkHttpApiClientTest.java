@@ -35,10 +35,24 @@ public class BaseOkHttpApiClientTest {
     }
 
     @Test
-    void buildUrlTest() {
+    void buildUrl_1() {
         var url = apiClient.buildUrl("v1/account");
 
         assertEquals(config.getUrl() + "/v1/account", url);
+    }
+
+    @Test
+    void buildUrl_2() {
+        var url = apiClient.buildUrl("v1/account", "aaa", "bbb");
+
+        assertEquals(config.getUrl() + "/v1/account/aaa/bbb", url);
+    }
+
+    @Test
+    void buildUrl_3() {
+        var url = apiClient.buildUrl("v1/account", 3, 12);
+
+        assertEquals(config.getUrl() + "/v1/account/3/12", url);
     }
 
     @Test

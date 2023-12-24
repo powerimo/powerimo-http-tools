@@ -2,6 +2,7 @@ pipeline {
     environment {
         FULL_PATH_BRANCH = "${env.BRANCH_NAME}"
         RELEASE_BRANCH = FULL_PATH_BRANCH.substring(FULL_PATH_BRANCH.lastIndexOf('/') + 1, FULL_PATH_BRANCH.length()).trim()
+        NSS_API_KEY = credentials('tocl-nss-api-key')
     }
 
     tools {
@@ -62,11 +63,8 @@ pipeline {
     }
 
     post {
-         success {
-             sh '/var/jenkins_home/deployscripts/send-message-success.sh'
-         }
-         failure {
-             sh '/var/jenkins_home/deployscripts/send-message-fail.sh'
-         }
+        always {
+            nssSendJobResult(recipients: "AndewilEventsChannel")
+        }
     }
 }

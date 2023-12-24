@@ -142,9 +142,15 @@ public class BaseOkHttpApiClient implements Serializable {
     public String buildUrl(Object... args) {
         checkConfig();
         StringBuilder url = new StringBuilder(config.getUrl());
+
         for (var item: args) {
-            url.append("/").append(item);
+            if (item instanceof String s) {
+                url.append("/").append(s);
+            } else {
+                url.append("/").append(item);
+            }
         }
+
         return url.toString();
     }
 
