@@ -1,0 +1,5 @@
+{
+  "code": 400,
+  "messageCode": "ERR-00400",
+  "message": "Bad request (400). This is the sample message."
+}

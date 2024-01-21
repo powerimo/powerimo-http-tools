@@ -6,6 +6,7 @@ import lombok.Setter;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.powerimo.http.Envelope;
 import org.powerimo.http.exceptions.ApiCallException;
 import org.powerimo.http.exceptions.ApiClientException;
 
@@ -24,6 +25,7 @@ public class BaseOkHttpApiClient implements Serializable {
     private BaseOkHttpClientConfig config;
     private OkHttpPayloadConverter payloadConverter;
     private String apiKeyHeader = HEADER_API_KEY;
+    private OkHttpPayloadConverter errorEnvelopeConverter = new DefaultPayloadConverter();
 
     public static final String HEADER_API_KEY = "x-api-key";
 
@@ -59,10 +61,25 @@ public class BaseOkHttpApiClient implements Serializable {
 
         var call = httpClient.newCall(prepared);
         var response = call.execute();
-        if (response.isSuccessful())
+        if (response.isSuccessful()) {
             return response;
+        } else {
+            return handleExecuteRequestUnsuccessful(request, response);
+        }
+    }
+
+    public Response handleExecuteRequestUnsuccessful(@NonNull Request request, @NonNull Response response) throws IOException {
         if (response.body() != null) {
-            throw new ApiCallException(response.code(), response.body().string());
+            String body = response.body().string();
+
+            Envelope<?> envelope;
+            try {
+                envelope = errorEnvelopeConverter.deserialize(body, Envelope.class);
+            } catch (Exception ex) {
+                throw new ApiCallException(response.code(), body, ex);
+            }
+
+            throw new ApiCallException(response.code(), envelope.getMessageCode(), envelope.getMessage(), body);
         } else {
             throw new ApiCallException(response.code(), response.message());
         }
@@ -143,7 +160,7 @@ public class BaseOkHttpApiClient implements Serializable {
         checkConfig();
         StringBuilder url = new StringBuilder(config.getUrl());
 
-        for (var item: args) {
+        for (var item : args) {
             if (item instanceof String s) {
                 url.append("/").append(s);
             } else {

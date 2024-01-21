@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.powerimo.common.utils.Utils;
 import org.powerimo.http.MockDataObject;
+import org.powerimo.http.exceptions.ApiCallException;
+import org.powerimo.http.exceptions.PayloadConvertException;
 
 import java.io.IOException;
 
@@ -103,7 +105,7 @@ public class BaseOkHttpApiClientTest {
     }
 
     @Test
-    void deleteTest() throws IOException {
+    void delete_withBody() throws IOException {
         var requestBody = new MockDataObject();
         requestBody.setIntField(321);
         requestBody.setStringField("aaa");
@@ -119,17 +121,13 @@ public class BaseOkHttpApiClientTest {
     }
 
     @Test
-    void deleteEmpty() throws IOException {
-        var requestBody = new MockDataObject();
-        requestBody.setIntField(321);
-        requestBody.setStringField("aaa");
-
+    void delete_withEmptyBody() throws IOException {
         var answerBody = Utils.readTextResource("response_empty.json");
         mockWebServer.enqueue(new MockResponse()
                 .setBody(answerBody));
 
         var url = apiClient.buildUrl("test");
-        var data = apiClient.executeDelete(url, null, requestBody);
+        var data = apiClient.executeDelete(url, null, null);
 
         assertNull(data);
     }
@@ -142,5 +140,82 @@ public class BaseOkHttpApiClientTest {
         assertNull(client.getHttpClient());
         assertNull(client.getConfig());
         assertNull(client.getPayloadConverter());
+    }
+
+    @Test
+    void execute_400_nonEnveloped() throws IOException {
+        var body = Utils.readTextResource("400.json");
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(body)
+                .setResponseCode(400));
+        var url = apiClient.buildUrl("test");
+        var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
+
+        assertNotNull(ex);
+        assertEquals(body, ex.getResponseBody());
+    }
+
+    @Test
+    void execute_400_enveloped() throws IOException {
+        var body = Utils.readTextResource("400enveloped.json");
+        mockWebServer.enqueue(new MockResponse()
+                .setBody(body)
+                .setResponseCode(400));
+        var url = apiClient.buildUrl("test");
+        var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
+
+        assertNotNull(ex);
+        assertEquals(400, ex.getCode());
+        assertEquals("ERR-00400", ex.getApiMessageCode());
+        assertEquals("Bad request (400). This is the sample message.", ex.getMessage());
+        assertEquals(body, ex.getResponseBody());
+    }
+
+    @Test
+    void execute_400_emptyBody() {
+        mockWebServer.enqueue(new MockResponse()
+                .setResponseCode(400));
+        var url = apiClient.buildUrl("test");
+        var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
+
+        assertNotNull(ex);
+        assertEquals(400, ex.getCode());
+    }
+
+    @Test
+    void executePut_success() throws IOException {
+        var url = apiClient.buildUrl("test");
+        var body = Utils.readTextResource("response2.json");
+        mockWebServer.enqueue(new MockResponse().setResponseCode(200).setBody(body));
+
+        var data = apiClient.executePut(url, MockDataObject.class, "SAMPLE REQUEST DATA");
+
+        assertNotNull(data);
+    }
+
+    @Test
+    void execute_400_brokenJson() {
+        mockWebServer.enqueue(new MockResponse()
+                .setBody("{\"someAttribute\": \"123\", }")
+                .setResponseCode(400));
+        var url = apiClient.buildUrl("test");
+        var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
+
+        assertNotNull(ex);
+        assertEquals(400, ex.getCode());
+        assertNotNull(ex.getCause());
+        assertInstanceOf(PayloadConvertException.class, ex.getCause());
+    }
+
+    @Test
+    void payloadConverter_autoCreate() {
+        BaseOkHttpApiClient client = new BaseOkHttpApiClient();
+
+        assertNull(client.getPayloadConverter());
+
+        client.checkPayloadConverter();
+
+        assertNotNull(client.getPayloadConverter());
+        assertInstanceOf(DefaultPayloadConverter.class, client.getPayloadConverter());
     }
 }
