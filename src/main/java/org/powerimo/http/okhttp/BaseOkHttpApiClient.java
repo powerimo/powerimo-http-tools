@@ -55,9 +55,14 @@ public class BaseOkHttpApiClient implements Serializable {
         checkHttpClient();
         checkConfig();
 
-        Request prepared = request.newBuilder()
-                .addHeader(apiKeyHeader, config.getApiKey())
-                .build();
+        Request prepared;
+        if (config.getUseApiKey()) {
+            prepared = request.newBuilder()
+                    .addHeader(apiKeyHeader, config.getApiKey())
+                    .build();
+        } else {
+            prepared = request;
+        }
 
         var call = httpClient.newCall(prepared);
         var response = call.execute();

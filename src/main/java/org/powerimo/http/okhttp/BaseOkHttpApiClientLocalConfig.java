@@ -20,6 +20,7 @@ public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig, S
     private String apiKey;
     private long connectTimeout = 0;
     private long callTimeout = 0;
+    private boolean useApiKey = false;
 
     @Override
     public String getUrl() {
@@ -39,5 +40,10 @@ public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig, S
     @Override
     public long getCallTimeout() {
         return callTimeout;
+    }
+
+    @Override
+    public boolean getUseApiKey() {
+        return useApiKey;
     }
 }
