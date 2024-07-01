@@ -32,8 +32,7 @@ pipeline {
                 branch 'qa'
             }
             steps {
-                sh 'mvn -B clean compile versions:set -DnewVersion=1.0-SNAPSHOT'
-                sh 'mvn deploy'
+                sh 'mvn -B clean compile package -Drevision=${RELEASE_BRANCH}-SNAPSHOT'
             }
         }
 
@@ -42,21 +41,10 @@ pipeline {
                 expression { BRANCH_NAME ==~ /release\/[0-9]+\.[0-9]+/ }
             }
             steps {
-                sh 'mvn -B clean compile versions:set -DnewVersion=${RELEASE_BRANCH}.${BUILD_NUMBER}'
-                sh 'mvn -B package'
+                sh 'mvn -B clean package deploy -Drevision=${RELEASE_BRANCH}.${BUILD_NUMBER}'
                 // просмотр артефактов
                 sh 'ls -la'
                 sh 'ls -la target/'
-                nexusPublisher nexusInstanceId: 'nexus3',
-                                    nexusRepositoryId: 'maven-releases',
-                                    packages: [
-                                        [$class: 'MavenPackage', mavenAssetList:
-                                            [
-                                                [extension: 'jar', filePath: "target/powerimo-http-tools-${RELEASE_BRANCH}.${BUILD_NUMBER}.jar"]
-                                            ],
-                                            mavenCoordinate: [artifactId: 'powerimo-http-tools', groupId: 'org.powerimo', packaging: 'jar', version: "${RELEASE_BRANCH}.${BUILD_NUMBER}"]
-                                        ]
-                                    ]
             }
         }
 
