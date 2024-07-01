@@ -52,8 +52,8 @@ public class BaseOkHttpApiClient implements Serializable {
     }
 
     public Response executeRequest(@NonNull Request request) throws IOException {
-        checkHttpClient();
         checkConfig();
+        checkHttpClient();
 
         Request prepared;
         if (config.getUseApiKey()) {

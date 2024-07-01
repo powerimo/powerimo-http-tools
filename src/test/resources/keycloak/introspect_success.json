@@ -1,0 +1,31 @@
+{
+  "exp": 1719601033,
+  "iat": 1719600733,
+  "auth_time": 1719600731,
+  "jti": "8b27d9d8-74d0-4349-8dfe-7a121f09c3d4",
+  "iss": "http://localhost:1000/realms/dev",
+  "aud": "account",
+  "sub": "894e830c-5ab3-406a-b109-2236b9fc35dd",
+  "typ": "Bearer",
+  "azp": "account-console",
+  "nonce": "4d0959e2-88ae-42ad-baa5-7eb31e7889fa",
+  "session_state": "267d186b-86a2-4e74-98c0-ae55a6e591cc",
+  "acr": "1",
+  "resource_access": {
+    "account": {
+      "roles": ["manage-account", "manage-account-links"]
+    }
+  },
+  "scope": "openid email profile",
+  "sid": "267d186b-86a2-4e74-98c0-ae55a6e591cc",
+  "email_verified": false,
+  "name": "User 01",
+  "preferred_username": "user01@email.org",
+  "given_name": "User",
+  "family_name": "01",
+  "email": "user01@email.org",
+  "client_id": "account-console",
+  "username": "user01@email.org",
+  "token_type": "Bearer",
+  "active": true
+}
