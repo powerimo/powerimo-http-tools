@@ -3,6 +3,7 @@ package org.powerimo.http.okhttp;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -26,6 +27,7 @@ public class BaseOkHttpApiClient implements Serializable {
     private OkHttpPayloadConverter payloadConverter;
     private String apiKeyHeader = HEADER_API_KEY;
     private OkHttpPayloadConverter errorEnvelopeConverter = new DefaultPayloadConverter();
+    private Interceptor authenticationInterceptor;
 
     public static final String HEADER_API_KEY = "x-api-key";
 
@@ -37,11 +39,7 @@ public class BaseOkHttpApiClient implements Serializable {
     protected void checkHttpClient() {
         checkConfig();
         if (httpClient == null) {
-            httpClient = new OkHttpClient.Builder()
-                    .callTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
-                    .readTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
-                    .connectTimeout(config.getConnectTimeout(), TimeUnit.SECONDS)
-                    .build();
+            buildHttpClient();
         }
     }
 
@@ -176,4 +174,27 @@ public class BaseOkHttpApiClient implements Serializable {
         return url.toString();
     }
 
+    public void setAuthenticationInterceptor(Interceptor authenticationInterceptor) {
+        this.authenticationInterceptor = authenticationInterceptor;
+        buildHttpClient();
+    }
+
+    protected void buildHttpClient() {
+        var builder = new OkHttpClient.Builder()
+                .callTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
+                .readTimeout(config.getCallTimeout(), TimeUnit.SECONDS)
+                .connectTimeout(config.getConnectTimeout(), TimeUnit.SECONDS);
+
+        if (authenticationInterceptor != null) {
+            builder.addInterceptor(authenticationInterceptor);
+        }
+
+        customizeHttpClient(builder);
+
+        httpClient = builder.build();
+    }
+
+    protected void customizeHttpClient(OkHttpClient.Builder builder) {
+
+    }
 }

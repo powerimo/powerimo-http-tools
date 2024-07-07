@@ -1,11 +1,9 @@
-package org.powerimo.http.keycloak;
+package org.powerimo.http.keycloak.payloads;
 
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
-public class KeycloakTokenInfo {
+public class IntrospectResponsePayload {
     private long exp;
     private long iat;
     private long auth_time;

@@ -6,4 +6,5 @@ public interface BaseOkHttpClientConfig {
     long getConnectTimeout();
     long getCallTimeout();
     boolean getUseApiKey();
+
 }

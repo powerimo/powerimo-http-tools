@@ -1,9 +1,10 @@
 package org.powerimo.http.keycloak;
 
 public interface KeycloakParameters {
-    String getUrl();
+    String getServerUrl();
     String getRealm();
     String getClientId();
     String getClientSecret();
-    String getIntrospectionUri();
+    String getIntrospectionUrl();
+    String getAuthorizationUrl();
 }

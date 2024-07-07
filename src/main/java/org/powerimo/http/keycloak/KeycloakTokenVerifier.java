@@ -48,7 +48,7 @@ public class KeycloakTokenVerifier {
         var body = RequestBody.create(bodyText.getBytes(StandardCharsets.UTF_8));
 
         Request request = new Request.Builder()
-                .url(keycloakParameters.getIntrospectionUri())
+                .url(keycloakParameters.getIntrospectionUrl())
                 .addHeader("Authorization", authHeader)
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .post(body)

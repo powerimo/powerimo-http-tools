@@ -2,6 +2,7 @@ package org.powerimo.http.keycloak;
 
 import org.junit.jupiter.api.Test;
 import org.powerimo.common.utils.Utils;
+import org.powerimo.http.keycloak.payloads.IntrospectResponsePayload;
 import org.powerimo.http.okhttp.DefaultPayloadConverter;
 
 import java.io.IOException;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class KeycloakTokenVerifierTest {
     private static KeycloakParameters createParameters() {
         return KeycloakStaticParameters.builder()
-                .url("http://localhost:1000")
+                .serverUrl("http://localhost:1000")
                 .clientId("test-backend")
                 .clientSecret("TrWbdfeCFrkN0LhQj093F3RDtOW9q9eC")
                 .realm("dev")
@@ -31,7 +32,7 @@ public class KeycloakTokenVerifierTest {
         var json = Utils.readTextResource("keycloak/introspect_success.json");
         var converter = new DefaultPayloadConverter();
 
-        KeycloakTokenInfo tokenInfo = converter.deserialize(json, KeycloakTokenInfo.class);
+        IntrospectResponsePayload tokenInfo = converter.deserialize(json, IntrospectResponsePayload.class);
 
         assertNotNull(tokenInfo);
         assertEquals(1719601033, tokenInfo.getExp());

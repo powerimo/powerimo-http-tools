@@ -10,13 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class KeycloakStaticParameters implements KeycloakParameters {
-    private String url;
+    private String serverUrl;
     private String clientId;
     private String clientSecret;
     private String realm;
 
     @Override
-    public String getIntrospectionUri() {
-        return url + "/realms/" + realm + "/protocol/openid-connect/token/introspect";
+    public String getIntrospectionUrl() {
+        return serverUrl + "/realms/" + realm + "/protocol/openid-connect/token/introspect";
+    }
+
+    @Override
+    public String getAuthorizationUrl() {
+        return serverUrl + "/realms/" + realm + "/protocol/openid-connect/token";
     }
 }
