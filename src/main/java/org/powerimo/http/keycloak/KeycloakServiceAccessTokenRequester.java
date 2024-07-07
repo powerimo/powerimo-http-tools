@@ -23,10 +23,7 @@ import java.util.logging.Logger;
 @AllArgsConstructor
 public class KeycloakServiceAccessTokenRequester {
     private final Logger logger = Logger.getLogger(KeycloakServiceAccessTokenRequester.class.getName());
-    private String authUrl;
-    private String clientId;
-    private String clientSecret;
-    private String scope;
+    private String scope = "openid";
     private String grantType = "client_credentials";
     private String accessToken;
     private OkHttpClient httpClient;
@@ -54,9 +51,6 @@ public class KeycloakServiceAccessTokenRequester {
         parameters.setClientId(clientId);
         parameters.setClientSecret(clientSecret);
         parameters.setServerUrl(serverUrl);
-        this.authUrl = serverUrl;
-        this.clientId = clientId;
-        this.clientSecret = clientSecret;
         buildHttpClient();
     }
 
@@ -84,10 +78,12 @@ public class KeycloakServiceAccessTokenRequester {
     }
 
     public String requestAccessToken() {
-        if (clientId == null)
-            throw new AccessTokenObtainFailed("clientId is required", "incomplete credentials");
-        if (clientSecret == null) {
-            throw new AccessTokenObtainFailed("clientSecret is required", "incomplete credentials");
+        if (keycloakParameters == null)
+            throw new AccessTokenObtainFailed("Exception occurred while obtaining access token", "Keycloak parameters are missing");
+        if (keycloakParameters.getClientId() == null)
+            throw new AccessTokenObtainFailed("Exception occurred while obtaining access token", "Keycloak client id is missing");
+        if (keycloakParameters.getClientSecret() == null) {
+            throw new AccessTokenObtainFailed("Exception occurred while obtaining access token", "Keycloak client secret is missing");
         }
 
         int attempt = 0;
@@ -127,13 +123,13 @@ public class KeycloakServiceAccessTokenRequester {
 
     protected Response tryToGetAccessToken() throws IOException {
         RequestBody body = new FormBody.Builder()
-                .add("client_id", clientId)
-                .add("client_secret", clientSecret)
+                .add("client_id", keycloakParameters.getClientId())
+                .add("client_secret", keycloakParameters.getClientSecret())
                 .add("grant_type", grantType)
                 .build();
 
         Request request = new Request.Builder()
-                .url(authUrl)
+                .url(keycloakParameters.getAuthorizationUrl())
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .post(body)
                 .build();

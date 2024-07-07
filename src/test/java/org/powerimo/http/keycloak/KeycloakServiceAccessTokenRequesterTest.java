@@ -36,11 +36,15 @@ public class KeycloakServiceAccessTokenRequesterTest {
     }
 
     private KeycloakServiceAccessTokenRequester createClient() {
-        KeycloakServiceAccessTokenRequester client = new KeycloakServiceAccessTokenRequester();
-        client.setAuthUrl(getMockUrl());
-        client.setClientId(CLIENT_ID);
-        client.setClientSecret(CLIENT_SECRET);
+        KeycloakStaticParameters keycloakStaticParameters = KeycloakStaticParameters.builder()
+                .authorizationUrl(getMockUrl())
+                .clientId(CLIENT_ID)
+                .clientSecret(CLIENT_SECRET)
+                .build();
+
+        KeycloakServiceAccessTokenRequester client = new KeycloakServiceAccessTokenRequester(keycloakStaticParameters);
         client.setMaxRetries(REQUEST_RETRIES);
+
         return client;
     }
 
@@ -130,11 +134,13 @@ public class KeycloakServiceAccessTokenRequesterTest {
     @Test
     void testIncompleteClientSettings() {
         var client = createClient();
-        client.setClientId(null);
+        KeycloakStaticParameters staticParameters = (KeycloakStaticParameters) client.getKeycloakParameters();
+
+        staticParameters.setClientId(null);
         assertThrows(AccessTokenObtainFailed.class, client::refreshAccessToken);
 
-        client.setClientId(CLIENT_ID);
-        client.setClientSecret(null);
+        staticParameters.setClientId(CLIENT_ID);
+        staticParameters.setClientSecret(null);
         assertThrows(AccessTokenObtainFailed.class, client::refreshAccessToken);
     }
 
@@ -142,7 +148,7 @@ public class KeycloakServiceAccessTokenRequesterTest {
     void testPropertiesAreCorrect() {
         var client = createClient();
 
-        assertEquals(CLIENT_ID, client.getClientId());
-        assertEquals(CLIENT_SECRET, client.getClientSecret());
+        assertEquals(CLIENT_ID, client.getKeycloakParameters().getClientId());
+        assertEquals(CLIENT_SECRET, client.getKeycloakParameters().getClientSecret());
     }
 }
