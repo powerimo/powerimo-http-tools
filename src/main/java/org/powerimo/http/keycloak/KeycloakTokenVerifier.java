@@ -3,14 +3,12 @@ package org.powerimo.http.keycloak;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
+import okhttp3.*;
 import org.powerimo.http.exceptions.TokenVerifyException;
 import org.powerimo.http.okhttp.OkHttpPayloadConverter;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.concurrent.TimeUnit;
@@ -39,16 +37,18 @@ public class KeycloakTokenVerifier {
     }
 
     public String introspect(@NonNull String accessToken) throws IOException {
-        // prepare Client authentication header
+        // Prepare Client authentication header
         String auth = keycloakParameters.getClientId() + ":" + keycloakParameters.getClientSecret();
         byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
         String authHeader = "Basic " + new String(encodedAuth);
 
-        // request body
+        // Request body
         String cleanToken = accessToken.replaceFirst("Bearer ", "");
-        var body = new FormBody.Builder()
-                .add("token", cleanToken)
-                .build();
+        String formBody = "token=" + URLEncoder.encode(cleanToken, StandardCharsets.UTF_8.toString());
+        RequestBody body = RequestBody.create(
+                formBody,
+                MediaType.parse("application/x-www-form-urlencoded")
+        );
 
         Request request = new Request.Builder()
                 .url(keycloakParameters.getIntrospectionUrl())
@@ -57,19 +57,22 @@ public class KeycloakTokenVerifier {
                 .post(body)
                 .build();
 
-        var call = okHttpClient.newCall(request);
-        var response = call.execute();
-        if (response.isSuccessful()) {
-            return response.body().string();
-        } else {
-            String message = response.message();
-            if (message.isBlank()) {
-                message = "Error verifying access token. Server does not return any result";
+        try (Response response = okHttpClient.newCall(request).execute()) {
+            if (response.isSuccessful()) {
+                ResponseBody responseBody = response.body();
+                if (responseBody != null) {
+                    return responseBody.string();
+                } else {
+                    throw new TokenVerifyException(response.code(), "Empty response body");
+                }
+            } else {
+                String message = response.message();
+                if (message.isBlank()) {
+                    message = "Error verifying access token. Server did not return any result.";
+                }
+                throw new TokenVerifyException(response.code(), message);
             }
-            throw new TokenVerifyException(response.code(), message);
         }
     }
-
-
 
 }
