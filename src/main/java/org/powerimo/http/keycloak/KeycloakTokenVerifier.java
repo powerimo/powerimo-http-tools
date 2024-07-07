@@ -3,6 +3,7 @@ package org.powerimo.http.keycloak;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -44,8 +45,10 @@ public class KeycloakTokenVerifier {
         String authHeader = "Basic " + new String(encodedAuth);
 
         // request body
-        String bodyText = "token=" + accessToken.replaceFirst("Bearer ", "");
-        var body = RequestBody.create(bodyText.getBytes(StandardCharsets.UTF_8));
+        String cleanToken = accessToken.replaceFirst("Bearer ", "");
+        var body = new FormBody.Builder()
+                .add("token", cleanToken)
+                .build();
 
         Request request = new Request.Builder()
                 .url(keycloakParameters.getIntrospectionUrl())
