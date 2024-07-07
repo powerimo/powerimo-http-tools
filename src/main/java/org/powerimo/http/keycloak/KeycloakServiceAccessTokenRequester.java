@@ -1,5 +1,7 @@
 package org.powerimo.http.keycloak;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import okhttp3.*;
@@ -12,10 +14,13 @@ import org.powerimo.http.okhttp.OkHttpPayloadConverter;
 import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 public class KeycloakServiceAccessTokenRequester {
     private final Logger logger = Logger.getLogger(KeycloakServiceAccessTokenRequester.class.getName());
     private String authUrl;
@@ -24,23 +29,48 @@ public class KeycloakServiceAccessTokenRequester {
     private String scope;
     private String grantType = "client_credentials";
     private String accessToken;
-    private final OkHttpClient httpClient;
+    private OkHttpClient httpClient;
     private OkHttpPayloadConverter payloadConverter = new DefaultPayloadConverter();
     private TokenResponsePayload tokenResponse;
     private Instant tokenObtainedAt;
     private int maxRetries = 3;
     private int currentRetries = 0;
+    private KeycloakParameters keycloakParameters;
 
     public KeycloakServiceAccessTokenRequester() {
-        httpClient = new OkHttpClient();
+        buildHttpClient();
+        this.keycloakParameters = new KeycloakStaticParameters();
     }
 
-    public KeycloakServiceAccessTokenRequester(String authUrl, String clientId, String clientSecret) {
+    public KeycloakServiceAccessTokenRequester(KeycloakParameters parameters) {
+        buildHttpClient();
+        this.keycloakParameters = parameters;
+    }
+
+    public KeycloakServiceAccessTokenRequester(String serverUrl, String clientId, String clientSecret) {
         super();
-        this.authUrl = authUrl;
+        var parameters = new KeycloakStaticParameters();
+        this.keycloakParameters = parameters;
+        parameters.setClientId(clientId);
+        parameters.setClientSecret(clientSecret);
+        parameters.setServerUrl(serverUrl);
+        this.authUrl = serverUrl;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
-        httpClient = new OkHttpClient();
+        buildHttpClient();
+    }
+
+    protected void buildHttpClient() {
+        var builder = new OkHttpClient.Builder()
+                .callTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(10, TimeUnit.SECONDS);
+        customizeHttpClient(builder);
+        httpClient = builder.build();
+    }
+
+    protected void customizeHttpClient(OkHttpClient.Builder builder) {
+
     }
 
     public void refreshAccessToken() {

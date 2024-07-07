@@ -14,14 +14,16 @@ public class KeycloakStaticParameters implements KeycloakParameters {
     private String clientId;
     private String clientSecret;
     private String realm;
+    private String authorizationUrl;
+    private String introspectionUrl;
 
     @Override
     public String getIntrospectionUrl() {
-        return serverUrl + "/realms/" + realm + "/protocol/openid-connect/token/introspect";
+        return introspectionUrl == null ? serverUrl + "/realms/" + realm + "/protocol/openid-connect/token/introspect" : introspectionUrl;
     }
 
     @Override
     public String getAuthorizationUrl() {
-        return serverUrl + "/realms/" + realm + "/protocol/openid-connect/token";
+        return authorizationUrl == null ? serverUrl + "/realms/" + realm + "/protocol/openid-connect/token" : authorizationUrl;
     }
 }
