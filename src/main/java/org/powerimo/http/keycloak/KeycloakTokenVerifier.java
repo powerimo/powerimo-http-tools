@@ -44,7 +44,7 @@ public class KeycloakTokenVerifier {
 
         // Request body
         String cleanToken = accessToken.replaceFirst("Bearer ", "");
-        String formBody = "token=" + URLEncoder.encode(cleanToken, StandardCharsets.UTF_8.toString());
+        String formBody = "token=" + URLEncoder.encode(cleanToken, StandardCharsets.UTF_8);
         RequestBody body = RequestBody.create(
                 formBody,
                 MediaType.parse("application/x-www-form-urlencoded")
