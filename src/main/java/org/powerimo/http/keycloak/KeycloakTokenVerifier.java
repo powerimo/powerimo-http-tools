@@ -37,26 +37,29 @@ public class KeycloakTokenVerifier {
     }
 
     public String introspect(@NonNull String accessToken) throws IOException {
-        // Prepare Client authentication header
-        String auth = keycloakParameters.getClientId() + ":" + keycloakParameters.getClientSecret();
-        byte[] encodedAuth = Base64.getEncoder().encode(auth.getBytes(StandardCharsets.UTF_8));
-        String authHeader = "Basic " + new String(encodedAuth);
+        // Prepare client authentication header
+        String clientId = keycloakParameters.getClientId();
+        String clientSecret = keycloakParameters.getClientSecret();
+        String auth = clientId + ":" + clientSecret;
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.UTF_8));
+        String authHeader = "Basic " + encodedAuth;
+
+        // Clean token
+        String cleanToken = accessToken.replaceFirst("Bearer ", "");
 
         // Request body
-        String cleanToken = accessToken.replaceFirst("Bearer ", "");
-        String formBody = "token=" + URLEncoder.encode(cleanToken, StandardCharsets.UTF_8);
-        RequestBody body = RequestBody.create(
-                formBody,
-                MediaType.parse("application/x-www-form-urlencoded")
-        );
+        RequestBody body = new FormBody.Builder()
+                .add("token", cleanToken)
+                .build();
 
+        // Build the request
         Request request = new Request.Builder()
                 .url(keycloakParameters.getIntrospectionUrl())
                 .addHeader("Authorization", authHeader)
-                .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .post(body)
                 .build();
 
+        // Execute the request and handle the response
         try (Response response = okHttpClient.newCall(request).execute()) {
             if (response.isSuccessful()) {
                 ResponseBody responseBody = response.body();
@@ -74,5 +77,6 @@ public class KeycloakTokenVerifier {
             }
         }
     }
+
 
 }
