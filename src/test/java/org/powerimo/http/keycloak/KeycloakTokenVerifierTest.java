@@ -21,7 +21,7 @@ public class KeycloakTokenVerifierTest {
 
     //@Test
     public void devTest() throws IOException {
-        String s = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzOE5MU3hhcGhXdF9sVHlSc0V2Q0xhMk5KVXJnNXg1STR4ZHVpWGkxal9JIn0.eyJleHAiOjE3MjA0MzkzODMsImlhdCI6MTcyMDQzOTA4MywiYXV0aF90aW1lIjoxNzIwNDM4NDcwLCJqdGkiOiJiMzk4Y2Q0NS0zMmYxLTQ3MjQtYTAzZC1hZmZkYjJjM2QyNjkiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjEwMDAvcmVhbG1zL2RldiIsInN1YiI6ImRjZDhlOGMyLTFiYzUtNDc4OC1iNmRjLThjYzViMjZhYjAzZSIsInR5cCI6IkJlYXJlciIsImF6cCI6InRlc3QtZnJvbnRlbmQiLCJzZXNzaW9uX3N0YXRlIjoiMzdkNGIzNTktZjhlYi00YTA2LTg2NGQtNjIzNzI3ZTUzNjdiIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIiLCJodHRwOi8vbG9jYWxob3N0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWRldiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6IjM3ZDRiMzU5LWY4ZWItNGEwNi04NjRkLTYyMzcyN2U1MzY3YiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6InVzZXIwMkBlbWFpbC5vcmcgdXNlcjAyQGVtYWlsLm9yZyIsInByZWZlcnJlZF91c2VybmFtZSI6InVzZXIwMkBlbWFpbC5vcmciLCJnaXZlbl9uYW1lIjoidXNlcjAyQGVtYWlsLm9yZyIsImZhbWlseV9uYW1lIjoidXNlcjAyQGVtYWlsLm9yZyIsImVtYWlsIjoidXNlcjAyQGVtYWlsLm9yZyJ9.LJwILrHWF_IFR7uJ98x0M38akgkZyMRXQjvsqsRvU7bB_O0EPYS9wMxuzfHH2xjTRB_aXEbD-mbNRNPQlxaV8JPXjR5nYCd0Ux4NavLHXPT1BlsypoxGq8pQhIfCTrRRU6lKq62ifWrQTw9pVWyPnrMbzuZP9trAJspyDZ2em_DbAa9TnKD6gtVdNFn1vEctCNqDi_OwQU_Kf4VdSESHGmnmKC0ql7DkadrwtozvyQQl65q7G1oddoFpUfx8WEX6U_IjN74QrPPWZqaL1fKULugldkTPV0ALg3XqLIjGal2jOiWukD68QDDA5RDYuOh-w5bKPOLCUvRSH1_K_d8IAw";
+        String s = "eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJzOE5MU3hhcGhXdF9sVHlSc0V2Q0xhMk5KVXJnNXg1STR4ZHVpWGkxal9JIn0.eyJleHAiOjE3MjA0NDA3ODAsImlhdCI6MTcyMDQ0MDQ4MCwiYXV0aF90aW1lIjoxNzIwNDM4NDcwLCJqdGkiOiI2ZGMwOTE1Mi05MGI4LTQxOGUtYmFmYi1lMjU4NDEzNjkyMGQiLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjEwMDAvcmVhbG1zL2RldiIsInN1YiI6ImRjZDhlOGMyLTFiYzUtNDc4OC1iNmRjLThjYzViMjZhYjAzZSIsInR5cCI6IkJlYXJlciIsImF6cCI6InRlc3QtZnJvbnRlbmQiLCJzZXNzaW9uX3N0YXRlIjoiMzdkNGIzNTktZjhlYi00YTA2LTg2NGQtNjIzNzI3ZTUzNjdiIiwiYWNyIjoiMSIsImFsbG93ZWQtb3JpZ2lucyI6WyIiLCJodHRwOi8vbG9jYWxob3N0Il0sInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJkZWZhdWx0LXJvbGVzLWRldiIsIm9mZmxpbmVfYWNjZXNzIiwidW1hX2F1dGhvcml6YXRpb24iXX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsInNpZCI6IjM3ZDRiMzU5LWY4ZWItNGEwNi04NjRkLTYyMzcyN2U1MzY3YiIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwibmFtZSI6InVzZXIwMkBlbWFpbC5vcmcgdXNlcjAyQGVtYWlsLm9yZyIsInByZWZlcnJlZF91c2VybmFtZSI6InVzZXIwMkBlbWFpbC5vcmciLCJnaXZlbl9uYW1lIjoidXNlcjAyQGVtYWlsLm9yZyIsImZhbWlseV9uYW1lIjoidXNlcjAyQGVtYWlsLm9yZyIsImVtYWlsIjoidXNlcjAyQGVtYWlsLm9yZyJ9.tzo31AcNUk07EBxsU51hDZftv3lxT0yz67ZSLIn4Jp90v0zlPJh6kFAQFl2D7XG4yN00PHn99GwT6tBDEFeeriqZihWBjm7KFiA3wcXLO5gqXZm_yJNdrN0N-wSXvHwlD_xZ_UH8AiE28me78PhCr1ZQRYos2H92MnEUswjC65HPBhU7VKi77h-dbe_IWfoqDGZwwoESubnmxfQO5BAWJQ-xRyzCThx7mBTesKIIPxWM7vtmx3X9WgKGzne2qwA3xiS-G5lQm3_LLIAn8f2rvJF0t2_PQHtKr4Sou944xpIff1rKfAKm79bnUs8NBYi9D5Ks09csqgs9aPUyN0BjZg";
         KeycloakStaticParameters parameters = (KeycloakStaticParameters) createParameters();
         parameters.setClientSecret("**********");
         var verifier = new KeycloakTokenVerifier(parameters);
@@ -49,7 +49,7 @@ public class KeycloakTokenVerifierTest {
         assertNotNull(tokenInfo);
         assertEquals(1719601033, tokenInfo.getExp());
         assertEquals(1719600733, tokenInfo.getIat());
-        assertEquals(1719600731, tokenInfo.getAuth_time());
+        assertEquals(1719600731, tokenInfo.getAuthTime());
         assertEquals("8b27d9d8-74d0-4349-8dfe-7a121f09c3d4", tokenInfo.getJti());
         assertEquals("http://localhost:1000/realms/dev", tokenInfo.getIss());
         assertEquals("account", tokenInfo.getAud());
@@ -57,19 +57,54 @@ public class KeycloakTokenVerifierTest {
         assertEquals("Bearer", tokenInfo.getTyp());
         assertEquals("account-console", tokenInfo.getAzp());
         assertEquals("4d0959e2-88ae-42ad-baa5-7eb31e7889fa", tokenInfo.getNonce());
-        assertEquals("267d186b-86a2-4e74-98c0-ae55a6e591cc", tokenInfo.getSession_state());
+        assertEquals("267d186b-86a2-4e74-98c0-ae55a6e591cc", tokenInfo.getSessionState());
         assertEquals("1", tokenInfo.getAcr());
         assertEquals("openid email profile", tokenInfo.getScope());
         assertEquals("267d186b-86a2-4e74-98c0-ae55a6e591cc", tokenInfo.getSid());
-        assertFalse(tokenInfo.isEmail_verified());
+        assertFalse(tokenInfo.isEmailVerified());
         assertEquals("User 01", tokenInfo.getName());
-        assertEquals("user01@email.org", tokenInfo.getPreferred_username());
-        assertEquals("User", tokenInfo.getGiven_name());
-        assertEquals("01", tokenInfo.getFamily_name());
+        assertEquals("user01@email.org", tokenInfo.getPreferredUsername());
+        assertEquals("User", tokenInfo.getGivenName());
+        assertEquals("01", tokenInfo.getFamilyName());
         assertEquals("user01@email.org", tokenInfo.getEmail());
-        assertEquals("account-console", tokenInfo.getClient_id());
+        assertEquals("account-console", tokenInfo.getClientId());
         assertEquals("user01@email.org", tokenInfo.getUsername());
-        assertEquals("Bearer", tokenInfo.getToken_type());
+        assertEquals("Bearer", tokenInfo.getTokenType());
         assertTrue(tokenInfo.isActive());
+    }
+
+    @Test
+    void testJsonIntrospect2_success() throws IOException {
+        var json = Utils.readTextResource("keycloak/introspect_success_2.json");
+        var converter = new DefaultPayloadConverter();
+
+        IntrospectResponsePayload tokenInfo = converter.deserialize(json, IntrospectResponsePayload.class);
+
+        assertNotNull(tokenInfo);
+        assertEquals(1720514903, tokenInfo.getExp());
+        assertEquals(1720514303, tokenInfo.getIat());
+        assertEquals(1720512686, tokenInfo.getAuthTime());
+        assertEquals("7cd4959c-d574-4718-ae1b-36fb79d55926", tokenInfo.getJti());
+        assertEquals("http://localhost:1000/realms/dev", tokenInfo.getIss());
+        assertEquals("dcd8e8c2-1bc5-4788-b6dc-8cc5b26ab03e", tokenInfo.getSub());
+        assertEquals("Bearer", tokenInfo.getTyp());
+        assertEquals("test-frontend", tokenInfo.getAzp());
+        assertEquals("15e45720-7fe2-4e81-a27f-116c42103dbd", tokenInfo.getSessionState());
+        assertEquals("0", tokenInfo.getAcr());
+        assertEquals("email profile", tokenInfo.getScope());
+        assertEquals("15e45720-7fe2-4e81-a27f-116c42103dbd", tokenInfo.getSid());
+        assertFalse(tokenInfo.isEmailVerified());
+        assertEquals("user02", tokenInfo.getName());
+        assertEquals("user02@email.org", tokenInfo.getPreferredUsername());
+        assertEquals("User", tokenInfo.getGivenName());
+        assertEquals("02", tokenInfo.getFamilyName());
+        assertEquals("user02@email.org", tokenInfo.getEmail());
+        assertEquals("test-frontend", tokenInfo.getClientId());
+        assertEquals("user02@email.org", tokenInfo.getUsername());
+        assertEquals("Bearer", tokenInfo.getTokenType());
+        assertTrue(tokenInfo.isActive());
+        assertNotNull(tokenInfo.getRealmAccess());
+        assertNotNull(tokenInfo.getRealmAccess().getRoles());
+        assertEquals(3, tokenInfo.getRealmAccess().getRoles().size());
     }
 }

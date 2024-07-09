@@ -1,0 +1,35 @@
+{
+  "exp": 1720514903,
+  "iat": 1720514303,
+  "auth_time": 1720512686,
+  "jti": "7cd4959c-d574-4718-ae1b-36fb79d55926",
+  "iss": "http://localhost:1000/realms/dev",
+  "sub": "dcd8e8c2-1bc5-4788-b6dc-8cc5b26ab03e",
+  "typ": "Bearer",
+  "azp": "test-frontend",
+  "session_state": "15e45720-7fe2-4e81-a27f-116c42103dbd",
+  "acr": "0",
+  "allowed-origins": [
+    "",
+    "http://localhost"
+  ],
+  "realm_access": {
+    "roles": [
+      "default-roles-dev",
+      "offline_access",
+      "uma_authorization"
+    ]
+  },
+  "scope": "email profile",
+  "sid": "15e45720-7fe2-4e81-a27f-116c42103dbd",
+  "email_verified": false,
+  "name": "user02",
+  "preferred_username": "user02@email.org",
+  "given_name": "User",
+  "family_name": "02",
+  "email": "user02@email.org",
+  "client_id": "test-frontend",
+  "username": "user02@email.org",
+  "token_type": "Bearer",
+  "active": true
+}

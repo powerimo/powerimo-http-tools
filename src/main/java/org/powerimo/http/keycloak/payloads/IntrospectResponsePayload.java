@@ -1,12 +1,18 @@
 package org.powerimo.http.keycloak.payloads;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class IntrospectResponsePayload {
     private long exp;
     private long iat;
-    private long auth_time;
+
+    @JsonProperty("auth_time")
+    private long authTime;
     private String jti;
     private String iss;
     private String aud;
@@ -14,18 +20,43 @@ public class IntrospectResponsePayload {
     private String typ;
     private String azp;
     private String nonce;
-    private String session_state;
+
+    @JsonProperty("session_state")
+    private String sessionState;
     private String acr;
     private String scope;
     private String sid;
-    private boolean email_verified;
+
+    @JsonProperty("email_verified")
+    private boolean emailVerified;
     private String name;
-    private String preferred_username;
-    private String given_name;
-    private String family_name;
+
+    @JsonProperty("preferred_username")
+    private String preferredUsername;
+
+    @JsonProperty("given_name")
+    private String givenName;
+
+    @JsonProperty("family_name")
+    private String familyName;
     private String email;
-    private String client_id;
+
+    @JsonProperty("client_id")
+    private String clientId;
     private String username;
-    private String token_type;
+
+    @JsonProperty("token_type")
+    private String tokenType;
     private boolean active;
+
+    @JsonProperty("allowed-origins")
+    private List<String> allowedOrigins;
+
+    @JsonProperty("realm_access")
+    private RealmAccess realmAccess = new RealmAccess();
+
+    @Data
+    public static class RealmAccess {
+        private List<String> roles = new ArrayList<>();
+    }
 }
