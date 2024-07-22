@@ -165,7 +165,7 @@ public class BaseOkHttpApiClientTest {
         var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
 
         assertNotNull(ex);
-        assertEquals(400, ex.getCode());
+        assertEquals(400, ex.getHttpCode());
         assertEquals("ERR-00400", ex.getApiMessageCode());
         assertEquals("Bad request (400). This is the sample message.", ex.getMessage());
         assertEquals(body, ex.getResponseBody());
@@ -179,7 +179,7 @@ public class BaseOkHttpApiClientTest {
         var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
 
         assertNotNull(ex);
-        assertEquals(400, ex.getCode());
+        assertEquals(400, ex.getHttpCode());
     }
 
     @Test
@@ -202,7 +202,7 @@ public class BaseOkHttpApiClientTest {
         var ex = assertThrows(ApiCallException.class, () -> apiClient.executeGet(url, MockDataObject.class));
 
         assertNotNull(ex);
-        assertEquals(400, ex.getCode());
+        assertEquals(400, ex.getHttpCode());
         assertNotNull(ex.getCause());
         assertInstanceOf(PayloadConvertException.class, ex.getCause());
     }

@@ -3,8 +3,7 @@ package org.powerimo.http.exceptions;
 import lombok.Getter;
 
 @Getter
-public class ApiCallException extends RuntimeException {
-    private final int code;
+public class ApiCallException extends HttpStatusException {
     private final String apiMessageCode;
     private final String responseBody;
 
@@ -13,22 +12,19 @@ public class ApiCallException extends RuntimeException {
     }
 
     public ApiCallException(int code, String message) {
-        super(formatMessage(code, message));
-        this.code = code;
+        super(code, formatMessage(code, message));
         apiMessageCode = null;
         this.responseBody = null;
     }
 
     public ApiCallException(int code, String message, Throwable ex) {
-        super(formatMessage(code, message), ex);
-        this.code = code;
+        super(code, formatMessage(code, message), ex);
         apiMessageCode = null;
         this.responseBody = null;
     }
 
     public ApiCallException(int httpCode, String apiMessageCode, String apiMessage, String responseBody) {
-        super(apiMessage);
-        this.code = httpCode;
+        super(httpCode, apiMessage);
         this.apiMessageCode = apiMessageCode;
         this.responseBody = responseBody;
     }
