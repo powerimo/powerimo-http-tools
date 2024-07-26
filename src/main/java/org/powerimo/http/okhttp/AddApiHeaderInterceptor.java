@@ -18,8 +18,9 @@ public class AddApiHeaderInterceptor implements Interceptor {
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
         var request = chain.request();
+
         var authorizedRequest = request.newBuilder()
-                .addHeader(apiKeyHeader, apiKey)
+                .addHeader(apiKeyHeader, apiKey != null ? apiKey : "")
                 .build();
 
         return chain.proceed(authorizedRequest);
