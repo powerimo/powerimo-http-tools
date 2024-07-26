@@ -13,14 +13,20 @@ import java.io.IOException;
 public class AddApiHeaderInterceptor implements Interceptor {
     private String apiKeyHeader = "x-api-key";
     private String apiKey;
+    private ApiKeySource apiKeySource;
 
     @NotNull
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {
         var request = chain.request();
 
+        String actualApiKey = apiKey;
+        if (apiKeySource != null) {
+            actualApiKey = apiKeySource.getApiKeyForRequest(request);
+        }
+
         var authorizedRequest = request.newBuilder()
-                .addHeader(apiKeyHeader, apiKey != null ? apiKey : "")
+                .addHeader(apiKeyHeader, actualApiKey != null ? actualApiKey : "")
                 .build();
 
         return chain.proceed(authorizedRequest);
