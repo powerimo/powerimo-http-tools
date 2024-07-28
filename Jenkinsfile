@@ -38,7 +38,7 @@ pipeline {
 
         stage('build RELEASE') {
             when {
-                expression { BRANCH_NAME ==~ /release\/[0-9]+\.[0-9]+/ }
+                expression { BRANCH_NAME ==~ /release\/[0-9]+\.[0-9]+\.[0-9]+/ }
             }
             steps {
                 sh 'mvn -B clean package deploy -Drevision=${RELEASE_BRANCH}'
