@@ -41,7 +41,7 @@ pipeline {
                 expression { BRANCH_NAME ==~ /release\/[0-9]+\.[0-9]+/ }
             }
             steps {
-                sh 'mvn -B clean package deploy -Drevision=${RELEASE_BRANCH}.${BUILD_NUMBER}'
+                sh 'mvn -B clean package deploy -Drevision=${RELEASE_BRANCH}'
                 // просмотр артефактов
                 sh 'ls -la'
                 sh 'ls -la target/'
