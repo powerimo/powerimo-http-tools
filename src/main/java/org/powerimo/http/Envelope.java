@@ -4,6 +4,13 @@ import lombok.Data;
 
 import java.time.Instant;
 
+/**
+ * A generic container used to encapsulate data, metadata, and status information
+ * for API responses or other data structures. The class provides utility methods
+ * for creating instances with a fluent builder pattern for customization.
+ *
+ * @param <T> the type of the data contained within the envelope
+ */
 @Data
 public class Envelope<T> {
     private Instant timestamp;
