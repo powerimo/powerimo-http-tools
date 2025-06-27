@@ -1,12 +1,16 @@
 package org.powerimo.http.keycloak.payloads;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.Data;
+import org.powerimo.http.serialization.StringOrListDeserializer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class IntrospectResponsePayload {
     private long exp;
     private long iat;
@@ -15,7 +19,10 @@ public class IntrospectResponsePayload {
     private long authTime;
     private String jti;
     private String iss;
-    private String aud;
+
+    @JsonDeserialize(using = StringOrListDeserializer.class)
+    private List<String> aud;
+
     private String sub;
     private String typ;
     private String azp;

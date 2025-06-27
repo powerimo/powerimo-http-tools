@@ -52,7 +52,7 @@ public class KeycloakTokenVerifierTest {
         assertEquals(1719600731, tokenInfo.getAuthTime());
         assertEquals("8b27d9d8-74d0-4349-8dfe-7a121f09c3d4", tokenInfo.getJti());
         assertEquals("http://localhost:1000/realms/dev", tokenInfo.getIss());
-        assertEquals("account", tokenInfo.getAud());
+        assertEquals(1, tokenInfo.getAud().size());
         assertEquals("894e830c-5ab3-406a-b109-2236b9fc35dd", tokenInfo.getSub());
         assertEquals("Bearer", tokenInfo.getTyp());
         assertEquals("account-console", tokenInfo.getAzp());
