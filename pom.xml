@@ -9,6 +9,7 @@
     <version>${revision}</version>
     <description>Powerimo HTTP classes and utils</description>
     <url>https://github.com/powerimo/powerimo-http-tools</url>
+    <name>Powerimo HTTP library</name>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
