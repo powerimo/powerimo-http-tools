@@ -4,7 +4,6 @@ import lombok.Getter;
 import lombok.Setter;
 import okhttp3.Interceptor;
 import okhttp3.Response;
-import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -15,9 +14,8 @@ public class AddApiHeaderInterceptor implements Interceptor {
     private String apiKey;
     private ApiKeySource apiKeySource;
 
-    @NotNull
     @Override
-    public Response intercept(@NotNull Chain chain) throws IOException {
+    public Response intercept(Chain chain) throws IOException {
         var request = chain.request();
 
         String actualApiKey = apiKey;
