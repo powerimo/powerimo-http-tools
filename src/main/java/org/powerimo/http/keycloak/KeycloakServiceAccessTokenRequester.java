@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import okhttp3.*;
 import org.powerimo.http.exceptions.AccessTokenObtainFailed;
-import org.powerimo.http.exceptions.ApiClientException;
 import org.powerimo.http.keycloak.payloads.TokenResponsePayload;
 import org.powerimo.http.okhttp.DefaultPayloadConverter;
 import org.powerimo.http.okhttp.OkHttpPayloadConverter;
@@ -23,25 +22,35 @@ import java.util.logging.Logger;
 @AllArgsConstructor
 public class KeycloakServiceAccessTokenRequester {
     private final Logger logger = Logger.getLogger(KeycloakServiceAccessTokenRequester.class.getName());
-    private String scope = "openid";
-    private String grantType = "client_credentials";
+    @Builder.Default private String scope = "openid";
+    @Builder.Default private String grantType = "client_credentials";
     private String accessToken;
     private OkHttpClient httpClient;
-    private OkHttpPayloadConverter payloadConverter = new DefaultPayloadConverter();
+    @Builder.Default private OkHttpPayloadConverter payloadConverter = new DefaultPayloadConverter();
     private TokenResponsePayload tokenResponse;
     private Instant tokenObtainedAt;
-    private int maxRetries = 3;
-    private int currentRetries = 0;
+    @Builder.Default private int maxRetries = 3;
+    @Builder.Default private int currentRetries = 0;
     private KeycloakParameters keycloakParameters;
 
     public KeycloakServiceAccessTokenRequester() {
+        initDefaults();
         buildHttpClient();
         this.keycloakParameters = new KeycloakStaticParameters();
     }
 
     public KeycloakServiceAccessTokenRequester(KeycloakParameters parameters) {
+        initDefaults();
         buildHttpClient();
         this.keycloakParameters = parameters;
+    }
+
+    private void initDefaults() {
+        this.scope = "openid";
+        this.grantType = "client_credentials";
+        this.payloadConverter = new DefaultPayloadConverter();
+        this.maxRetries = 3;
+        this.currentRetries = 0;
     }
 
     public KeycloakServiceAccessTokenRequester(String serverUrl, String clientId, String clientSecret) {
@@ -129,7 +138,7 @@ public class KeycloakServiceAccessTokenRequester {
                 .build();
 
         Request request = new Request.Builder()
-                .url(keycloakParameters.getAuthorizationUrl())
+                .url(keycloakParameters.getTokenUrl())
                 .addHeader("Content-Type", "application/x-www-form-urlencoded")
                 .post(body)
                 .build();

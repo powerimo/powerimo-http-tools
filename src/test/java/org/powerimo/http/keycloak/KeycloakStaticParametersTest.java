@@ -37,15 +37,15 @@ class KeycloakStaticParametersTest {
     }
 
     @Test
-    void testGetAuthorizationUrl_default() {
+    void testGetTokenUrl_default() {
         var p = createTestParameters();
-        assertEquals(SERVER_URL + "/realms/" + REALM_NAME + "/protocol/openid-connect/token", p.getAuthorizationUrl());
+        assertEquals(SERVER_URL + "/realms/" + REALM_NAME + "/protocol/openid-connect/token", p.getTokenUrl());
     }
 
     @Test
-    void testGetAuthorizationUrl_custom() {
+    void testGetTokenUrl_custom() {
         var p = createTestParameters();
-        p.setAuthorizationUrl("http://localhost:1001");
-        assertEquals("http://localhost:1001", p.getAuthorizationUrl());
+        p.setTokenUrl("http://localhost:1001");
+        assertEquals("http://localhost:1001", p.getTokenUrl());
     }
 }

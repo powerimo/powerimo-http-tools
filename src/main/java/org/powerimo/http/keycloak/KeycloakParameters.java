@@ -6,5 +6,5 @@ public interface KeycloakParameters {
     String getClientId();
     String getClientSecret();
     String getIntrospectionUrl();
-    String getAuthorizationUrl();
+    String getTokenUrl();
 }

@@ -18,9 +18,9 @@ public class BaseOkHttpApiClientLocalConfig implements BaseOkHttpClientConfig, S
 
     private String url;
     private String apiKey;
-    private long connectTimeout = 0;
-    private long callTimeout = 0;
-    private boolean useApiKey = false;
+    @Builder.Default private long connectTimeout = 0;
+    @Builder.Default private long callTimeout = 0;
+    @Builder.Default private boolean useApiKey = false;
 
     @Override
     public String getUrl() {
