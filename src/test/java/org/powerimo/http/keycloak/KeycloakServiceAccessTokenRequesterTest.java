@@ -37,7 +37,7 @@ public class KeycloakServiceAccessTokenRequesterTest {
 
     private KeycloakServiceAccessTokenRequester createClient() {
         KeycloakStaticParameters keycloakStaticParameters = KeycloakStaticParameters.builder()
-                .authorizationUrl(getMockUrl())
+                .tokenUrl(getMockUrl())
                 .clientId(CLIENT_ID)
                 .clientSecret(CLIENT_SECRET)
                 .build();
@@ -52,6 +52,13 @@ public class KeycloakServiceAccessTokenRequesterTest {
         for (int i = 0; i < amount; i++) {
             mockWebServer.enqueue(response);
         }
+    }
+
+    @Test
+    void testDefaults() {
+        var client = new KeycloakServiceAccessTokenRequester();
+        assertEquals("client_credentials", client.getGrantType());
+        assertEquals("openid", client.getScope());
     }
 
     @Test
