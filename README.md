@@ -8,7 +8,7 @@ A Java library providing an OkHttp3-based API client framework with Keycloak OAu
 <dependency>
     <groupId>org.powerimo</groupId>
     <artifactId>powerimo-http-tools</artifactId>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
 </dependency>
 ```
 
